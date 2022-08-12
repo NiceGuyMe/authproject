@@ -2,6 +2,7 @@ import React from 'react';
 import {Routes} from "react-router-dom";
 import {BrowserRouter} from "react-router-dom";
 import Login from "./component/Login"
+import Welcome from "./component/Welcome"
 import {Route} from "react-router";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
         <BrowserRouter>
         <Routes>
             <Route path="/" element={<Login/>} />
+            <Route path="/welcome" element={ <Welcome/> } />
         </Routes>
         </BrowserRouter>
     );

@@ -1,9 +1,9 @@
-// Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
 import {
     createUserWithEmailAndPassword,
     FacebookAuthProvider,
+    GithubAuthProvider,
     getAuth,
     GoogleAuthProvider,
     sendPasswordResetEmail,
@@ -32,32 +32,29 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 getAnalytics(app);
-const provider = new FacebookAuthProvider();
 
-const facebookProvider = async () => {
+const githubProvider = new GithubAuthProvider();
 
-    signInWithPopup(auth, provider)
+const githubLogin = async () =>{
+    signInWithPopup(auth, githubProvider)
         .then((result) => {
-            // The signed-in user info.
-            const user = result.user;
+            GithubAuthProvider.credentialFromResult(result);
+        }).catch((error) => {
+        GithubAuthProvider.credentialFromError(error);
+// ...
+    });
+}
 
-            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-            const credential: any = FacebookAuthProvider.credentialFromResult(result);
+const facebookProvider = new FacebookAuthProvider();
 
-            const accessToken = credential.accessToken;
+const facebookLogin = async () => {
 
-            // ...
+    signInWithPopup(auth, facebookProvider)
+        .then((result) => {
+            FacebookAuthProvider.credentialFromResult(result);
         })
         .catch((error) => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.customData.email;
-            // The AuthCredential type that was used.
-            const credential = FacebookAuthProvider.credentialFromError(error);
-
-            // ...
+            FacebookAuthProvider.credentialFromError(error);
         });
 }
 const googleProvider = new GoogleAuthProvider();
@@ -117,7 +114,7 @@ const sendPasswordReset = async (email: string) => {
 };
 
 const logout = () => {
-    signOut(auth);
+    signOut(auth).then(r => console.log("success"));
 };
 
 export {
@@ -128,6 +125,7 @@ export {
     registerWithEmailAndPassword,
     sendPasswordReset,
     logout,
-    facebookProvider
+    facebookLogin,
+    githubLogin
 };
 

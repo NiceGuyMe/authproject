@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useAuthState} from "react-firebase-hooks/auth";
 import {useNavigate} from "react-router";
-import {auth, facebookProvider, logInWithEmailAndPassword, signInWithGoogle} from "../firebase";
+import {auth, facebookLogin, githubLogin, logInWithEmailAndPassword, signInWithGoogle} from "../firebase";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -38,9 +38,9 @@ function Login() {
                         <div className="social-login">
                             <h3>log in via</h3>
                             <div className="social-icons">
-                                <a href="" className="social-login__icon fab fa-github"></a>
-                                <a href="#" onClick={facebookProvider} className="social-login__icon fab fa-facebook"></a>
-                                <a href="#" onClick={signInWithGoogle} className="social-login__icon fab fa-google"></a>
+                                <a onClick={githubLogin} className="social-login__icon fab fa-github"></a>
+                                <a onClick={facebookLogin} className="social-login__icon fab fa-facebook"></a>
+                                <a onClick={signInWithGoogle} className="social-login__icon fab fa-google"></a>
                             </div>
                         </div>
                     </div>

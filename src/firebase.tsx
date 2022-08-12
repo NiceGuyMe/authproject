@@ -33,22 +33,20 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 getAnalytics(app);
 
+//github login
 const githubProvider = new GithubAuthProvider();
-
 const githubLogin = async () =>{
     signInWithPopup(auth, githubProvider)
         .then((result) => {
             GithubAuthProvider.credentialFromResult(result);
         }).catch((error) => {
         GithubAuthProvider.credentialFromError(error);
-// ...
     });
 }
 
+//facebook login
 const facebookProvider = new FacebookAuthProvider();
-
 const facebookLogin = async () => {
-
     signInWithPopup(auth, facebookProvider)
         .then((result) => {
             FacebookAuthProvider.credentialFromResult(result);
@@ -57,6 +55,9 @@ const facebookLogin = async () => {
             FacebookAuthProvider.credentialFromError(error);
         });
 }
+
+
+//google login
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
     try {

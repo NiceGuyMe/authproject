@@ -2,22 +2,16 @@
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
 import {
-    GoogleAuthProvider,
-    getAuth,
-    signInWithPopup,
-    signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    FacebookAuthProvider,
+    getAuth,
+    GoogleAuthProvider,
     sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signInWithPopup,
     signOut,
 } from "firebase/auth"
-import {
-    getFirestore,
-    query,
-    getDocs,
-    collection,
-    where,
-    addDoc,
-} from "firebase/firestore";
+import {addDoc, collection, getDocs, getFirestore, query, where,} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -37,10 +31,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const analytics = getAnalytics(app);
+getAnalytics(app);
+const provider = new FacebookAuthProvider();
 
+const facebookProvider = async () => {
 
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            // The signed-in user info.
+            const user = result.user;
 
+            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            const credential: any = FacebookAuthProvider.credentialFromResult(result);
+
+            const accessToken = credential.accessToken;
+
+            // ...
+        })
+        .catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = FacebookAuthProvider.credentialFromError(error);
+
+            // ...
+        });
+}
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
     try {
@@ -109,5 +128,6 @@ export {
     registerWithEmailAndPassword,
     sendPasswordReset,
     logout,
+    facebookProvider
 };
 

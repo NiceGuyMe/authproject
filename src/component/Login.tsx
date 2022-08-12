@@ -1,6 +1,20 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useAuthState} from "react-firebase-hooks/auth";
+import {useNavigate} from "react-router";
+import {auth, facebookProvider, logInWithEmailAndPassword, signInWithGoogle} from "../firebase";
 
 function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [user, loading] = useAuthState(auth);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (loading) {
+            // maybe trigger a loading screen
+            return;
+        }
+        if (user) navigate("/welcome");
+    }, [user, loading, navigate]);
     return (
             <div className="container">
                 <div className="screen">
@@ -8,13 +22,15 @@ function Login() {
                         <form className="login">
                             <div className="login__field">
                                 <i className="login__icon fas fa-user"></i>
-                                <input type="text" className="login__input" placeholder="User name / Email"></input>
+                                <input type="text" className="login__input" value={email}
+                                       onChange={(e) => setEmail(e.target.value)} placeholder="User name / Email"></input>
                             </div>
                             <div className="login__field">
                                 <i className="login__icon fas fa-lock"></i>
-                                <input type="password" className="login__input" placeholder="Password"></input>
+                                <input type="password" value={password}
+                                       onChange={(e) => setPassword(e.target.value)} className="login__input" placeholder="Password"></input>
                             </div>
-                            <button className="button login__submit">
+                            <button className="button login__submit" onClick={() => logInWithEmailAndPassword(email, password)}>
                                 <span className="button__text">Log In Now</span>
                                 <i className="button__icon fas fa-chevron-right"></i>
                             </button>
@@ -23,8 +39,8 @@ function Login() {
                             <h3>log in via</h3>
                             <div className="social-icons">
                                 <a href="" className="social-login__icon fab fa-github"></a>
-                                <a href="#" className="social-login__icon fab fa-facebook"></a>
-                                <a href="#" className="social-login__icon fab fa-google"></a>
+                                <a href="#" onClick={facebookProvider} className="social-login__icon fab fa-facebook"></a>
+                                <a href="#" onClick={signInWithGoogle} className="social-login__icon fab fa-google"></a>
                             </div>
                         </div>
                     </div>

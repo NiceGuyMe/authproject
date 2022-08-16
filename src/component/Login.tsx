@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useAuthState} from "react-firebase-hooks/auth";
 import {useNavigate} from "react-router";
-import {auth, facebookLogin, githubLogin, logInWithEmailAndPassword, signInWithGoogle} from "../firebase";
+import {auth, facebookLogin, githubLogin, signInWithGoogle} from "../firebase";
+import {signInWithEmailAndPassword} from "firebase/auth";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -15,6 +16,12 @@ function Login() {
         }
         if (user) navigate("/welcome");
     }, [user, loading, navigate]);
+
+    const login = (e: { preventDefault: () => void; }) => {
+        e.preventDefault()
+        signInWithEmailAndPassword(auth, email, password)
+            .then(r => navigate("/welcome"))
+    }
     return (
             <div className="container">
                 <div className="screen">
@@ -23,14 +30,14 @@ function Login() {
                             <div className="login__field">
                                 <i className="login__icon fas fa-user"></i>
                                 <input type="text" className="login__input" value={email}
-                                       onChange={(e) => setEmail(e.target.value)} placeholder="User name / Email"></input>
+                                       onChange={(e) => setEmail(e.target.value)} placeholder="Email"></input>
                             </div>
                             <div className="login__field">
                                 <i className="login__icon fas fa-lock"></i>
                                 <input type="password" value={password}
                                        onChange={(e) => setPassword(e.target.value)} className="login__input" placeholder="Password"></input>
                             </div>
-                            <button className="button login__submit" onClick={() => logInWithEmailAndPassword(email, password)}>
+                            <button className="button login__submit" onClick={(e) => login(e)}>
                                 <span className="button__text">Log In Now</span>
                                 <i className="button__icon fas fa-chevron-right"></i>
                             </button>

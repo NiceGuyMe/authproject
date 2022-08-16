@@ -1,13 +1,10 @@
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
 import {
-    createUserWithEmailAndPassword,
     FacebookAuthProvider,
     GithubAuthProvider,
     getAuth,
     GoogleAuthProvider,
-    sendPasswordResetEmail,
-    signInWithEmailAndPassword,
     signInWithPopup,
     signOut,
 } from "firebase/auth"
@@ -79,40 +76,7 @@ const signInWithGoogle = async () => {
     }
 };
 
-const logInWithEmailAndPassword = async (email: string, password: string) => {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (err: any) {
-        console.error(err);
-        alert(err.message);
-    }
-};
 
-const registerWithEmailAndPassword = async (name: any, email: string, password: string) => {
-    try {
-        const res = await createUserWithEmailAndPassword(auth, email, password);
-        const user = res.user;
-        await addDoc(collection(db, "users"), {
-            uid: user.uid,
-            name,
-            authProvider: "local",
-            email,
-        });
-    } catch (err: any) {
-        console.error(err);
-        alert(err.message);
-    }
-};
-
-const sendPasswordReset = async (email: string) => {
-    try {
-        await sendPasswordResetEmail(auth, email);
-        alert("Password reset link sent!");
-    } catch (err: any) {
-        console.error(err);
-        alert(err.message);
-    }
-};
 
 const logout = () => {
     signOut(auth).then(r => console.log("success"));
@@ -122,9 +86,6 @@ export {
     auth,
     db,
     signInWithGoogle,
-    logInWithEmailAndPassword,
-    registerWithEmailAndPassword,
-    sendPasswordReset,
     logout,
     facebookLogin,
     githubLogin
